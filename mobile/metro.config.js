@@ -85,6 +85,13 @@ config.resolver.resolveRequest = (context, moduleName, platform) => {
     ) {
       return context.resolveRequest(context, moduleName, platform);
     }
+    // Resolve the "@/..." tsconfig path alias to ./src/... for all platforms.
+    // The custom resolveRequest above bypasses Expo's tsconfig-paths layer,
+    // so the alias must be expanded here or native bundling fails to resolve it.
+    if (moduleName.startsWith('@/')) {
+      const aliased = path.resolve(__dirname, 'src', moduleName.slice(2));
+      return context.resolveRequest(context, aliased, platform);
+    }
     // Wildcard alias for Expo Google Fonts
     if (moduleName.startsWith('@expo-google-fonts/') && moduleName !== '@expo-google-fonts/dev') {
       return context.resolveRequest(context, '@expo-google-fonts/dev', platform);

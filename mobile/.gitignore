@@ -4,6 +4,7 @@ android/
 ios/
 dist/
 build/
+caches/
 .env
 .DS_Store
 *.log
